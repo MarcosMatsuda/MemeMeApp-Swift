@@ -21,7 +21,11 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s0B-7x-TXH">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <items>
-                                    <barButtonItem systemItem="action" id="ceU-VU-Yaw"/>
+                                    <barButtonItem systemItem="action" id="ceU-VU-Yaw">
+                                        <connections>
+                                            <action selector="share:" destination="BYZ-38-t0r" id="QnL-bk-0Ap"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3vd-zB-QBl">
@@ -85,6 +89,8 @@
                         <outlet property="imagePickerView" destination="BAt-Py-0zq" id="mbi-GE-KZc"/>
                         <outlet property="textFieldBotton" destination="iLJ-i8-JMe" id="k9i-In-MBv"/>
                         <outlet property="textFieldTop" destination="Shf-gf-yI3" id="8GP-sC-72x"/>
+                        <outlet property="toolBarBottom" destination="3vd-zB-QBl" id="FHR-Oi-wBk"/>
+                        <outlet property="toolBarTop" destination="s0B-7x-TXH" id="CJF-Bp-XDH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
