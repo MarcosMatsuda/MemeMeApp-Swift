@@ -63,7 +63,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let memedImage: UIImage = generateMemedImage()
         
         // Create the meme
-//        let meme = Meme(topTextField: textFieldTop.text!, bottomTextField: textFieldBotton.text!, originalImage: imagePickerView, memedImage: memedImage)
         
         let activityItem: [AnyObject] = [memedImage as AnyObject]
         
