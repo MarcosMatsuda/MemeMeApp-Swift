@@ -21,15 +21,23 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     var textFieldTag: Int = 0
     
+    let memeTextAttributes: [NSAttributedString.Key: Any] = [
+        .font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40.0)!,
+        .foregroundColor: UIColor.white,
+        .strokeColor: UIColor.black,
+        .strokeWidth: -3.0
+    ]
+    var memesArray = [Meme]()
+    let imagePicker = UIImagePickerController()    
+    
     // MARK: Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        imagePicker.delegate = self
         
-        textFieldTop.text = "TOP"
-        textFieldBotton.text = "BOTTOM"
-        textFieldTop.delegate = self
-        textFieldBotton.delegate = self
+        configure(textField: textFieldTop, withText: "TOP")
+        configure(textField: textFieldBotton, withText: "BOTTOM")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,8 +75,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let activityItem: [AnyObject] = [memedImage as AnyObject]
         
         let activityViewController = UIActivityViewController(activityItems: activityItem , applicationActivities: nil)
+        
         activityViewController.popoverPresentationController?.sourceView = self.view
+        
+        activityViewController.completionWithItemsHandler = { (activityType: UIActivity.ActivityType?, completed: Bool, returnedItems: [Any]?, error: Error?) -> Void in
+            if completed {
+                
+                let meme = Meme(
+                    topTextField: self.textFieldTop.text!,
+                    bottomTextField: self.textFieldBotton.text!,
+                    originalImage: self.imagePickerView,
+                    memedImage: memedImage)
+                
+                self.memesArray.append(meme)
+            }
+            
+        }
+        
         self.present(activityViewController, animated: true, completion: nil)
+        
     }
     
     // Especifica se a Controller View prefere que a status bar seja ocultada ou mostrada.
@@ -94,6 +119,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         view.endEditing(true)
         return true
+    }
+    
+    func configure(textField: UITextField, withText text: String) {
+        textField.text = text
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = .center
+        textField.autocapitalizationType = .allCharacters
+        textField.delegate = self
     }
     
     // MARK: KeyBoard
@@ -122,16 +155,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func pickAnImageForAlbum(_ sender: Any) {
         
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
         imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
     }
     
     @IBAction func pickAnImageForCamera(_ sender: Any) {
         
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
         imagePicker.sourceType = .camera
         present(imagePicker, animated: true, completion: nil)
     }
@@ -149,9 +178,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func generateMemedImage() -> UIImage {
         
-        // TODO: Hide toolbar and navbar
-        self.toolBarTop.isHidden = true
-        self.toolBarBottom.isHidden = true
+        self.hideTopAndBottomBars(true)
         
         // Render view to an image
         UIGraphicsBeginImageContext(self.view.frame.size)
@@ -159,10 +186,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
-        // TODO: Show toolbar and navbar
-        self.toolBarTop.isHidden = false
-        self.toolBarBottom.isHidden = false
+        self.hideTopAndBottomBars(false)
         
         return memedImage
+    }
+    
+    // MARK: toolbar
+    
+    func hideTopAndBottomBars(_ hide: Bool) {
+        self.toolBarTop.isHidden = hide
+        self.toolBarBottom.isHidden = hide
     }
 }
